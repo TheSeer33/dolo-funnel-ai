@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Save, Eye, Sparkles } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Sparkles, Monitor, Smartphone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../contexts/DataContext';
 import Button from '../components/Button';
+import AIContentGenerator from '../components/AIContentGenerator';
+import FunnelPreview from '../components/FunnelPreview';
 
 export default function FunnelBuilder() {
   const navigate = useNavigate();
-  const { addFunnel } = useData();
+  const { addFunnel, generateAIContent } = useData();
   const [activeStep, setActiveStep] = useState(1);
+  const [showAIGenerator, setShowAIGenerator] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
   
   const [funnelData, setFunnelData] = useState({
     name: '',
@@ -30,7 +35,8 @@ export default function FunnelBuilder() {
   const steps = [
     { id: 1, name: 'Type & Setup' },
     { id: 2, name: 'Content & Copy' },
-    { id: 3, name: 'Preview & Publish' }
+    { id: 3, name: 'Design & Preview' },
+    { id: 4, name: 'Publish' }
   ];
 
   const funnelTypes = [
@@ -40,6 +46,23 @@ export default function FunnelBuilder() {
     { id: 'lead-magnet', name: 'Lead Magnet', icon: '🧲' }
   ];
 
+  const handleAIGenerate = async (contentType: string, prompt: string) => {
+    setIsGenerating(true);
+    try {
+      const content = await generateAIContent(contentType, prompt);
+      setFunnelData(prev => ({
+        ...prev,
+        content: {
+          ...prev.content,
+          [contentType]: content
+        }
+      }));
+    } catch (error) {
+      console.error('Error generating AI content:', error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
   const handleSave = () => {
     if (funnelData.name && funnelData.content.headline) {
       addFunnel(funnelData);
@@ -74,6 +97,23 @@ export default function FunnelBuilder() {
             </div>
             
             <div className="flex items-center gap-3">
+              {activeStep >= 3 && (
+                <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                  <button
+                    onClick={() => setPreviewMode('desktop')}
+                    className={`p-2 rounded ${previewMode === 'desktop' ? 'bg-white shadow-sm' : ''}`}
+                  >
+                    <Monitor className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setPreviewMode('mobile')}
+                    className={`p-2 rounded ${previewMode === 'mobile' ? 'bg-white shadow-sm' : ''}`}
+                  >
+                    <Smartphone className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+              
               <Button variant="outline" onClick={handleSave}>
                 <Save className="w-4 h-4 mr-2" />
                 Save
@@ -88,7 +128,9 @@ export default function FunnelBuilder() {
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className={`grid ${activeStep >= 3 ? 'lg:grid-cols-2' : ''} gap-8`}>
+          <div className={activeStep >= 3 ? '' : 'max-w-4xl mx-auto'}>
         {/* Progress Steps */}
         <div className="bg-white rounded-2xl p-6 border border-gray-200 mb-8">
           <div className="flex items-center justify-between mb-6">
@@ -233,6 +275,19 @@ export default function FunnelBuilder() {
           )}
 
           {activeStep === 3 && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Design & Preview
+              </h3>
+              <div className="bg-blue-50 rounded-lg p-4">
+                <h4 className="font-medium text-blue-900 mb-2">Preview Your Funnel</h4>
+                <p className="text-sm text-blue-800">
+                  See how your funnel looks on desktop and mobile. Use the preview toggle in the header to switch between views.
+                </p>
+              </div>
+            </div>
+          )}
+          {activeStep === 4 && (
             <div className="text-center py-8">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Eye className="w-8 h-8 text-green-600" />
@@ -271,7 +326,28 @@ export default function FunnelBuilder() {
             Next
           </Button>
         </div>
+          </div>
+          
+          {/* Preview Panel */}
+          {activeStep >= 3 && (
+            <div className="lg:sticky lg:top-8">
+              <FunnelPreview 
+                funnel={funnelData} 
+                previewMode={previewMode}
+              />
+            </div>
+          )}
+        </div>
       </div>
+      
+      {/* AI Content Generator Modal */}
+      {showAIGenerator && (
+        <AIContentGenerator
+          onClose={() => setShowAIGenerator(false)}
+          onGenerate={handleAIGenerate}
+          isGenerating={isGenerating}
+        />
+      )}
     </div>
   );
 }
