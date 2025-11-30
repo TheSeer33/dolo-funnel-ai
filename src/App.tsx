@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 import FunnelBuilder from './pages/FunnelBuilder';
 import Analytics from './pages/Analytics';
+import PricingPage from './pages/PricingPage';
 import AdminPanel from './pages/AdminPanel';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { DataProvider } from './contexts/DataContext';
@@ -30,6 +31,10 @@ function AppRoutes() {
       <Route
         path="/analytics"
         element={user ? <Analytics /> : <Navigate to="/" replace />}
+      />
+      <Route
+        path="/pricing"
+        element={user ? <PricingPage /> : <Navigate to="/" replace />}
       />
       <Route
         path="/admin"
