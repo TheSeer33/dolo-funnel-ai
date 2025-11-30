@@ -99,30 +99,57 @@ export function DataProvider({ children }: DataProviderProps) {
   };
 
   const generateAIContent = async (type: string, prompt: string): Promise<string> => {
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // Simulate AI processing time
+    await new Promise(resolve => setTimeout(resolve, 2000));
     
-    const templates: Record<string, string[]> = {
-      headline: [
-        'Transform Your Business in 30 Days',
-        'The Secret to 10x Growth',
-        'From Zero to Hero: Your Success Story Starts Here',
-        'Unlock Your True Potential Today'
-      ],
-      subheadline: [
-        'Join 10,000+ successful entrepreneurs who\'ve already transformed their lives',
-        'The proven system that\'s helped people achieve extraordinary results',
-        'Everything you need to succeed, backed by real results'
-      ],
-      cta: [
-        'Get Started Today',
-        'Start Your Journey',
-        'Transform Your Life',
-        'Claim Your Spot'
-      ]
+    // Advanced AI content generation based on context
+    const generateContextualContent = (contentType: string, userPrompt: string): string => {
+      const promptLower = userPrompt.toLowerCase();
+      
+      switch (contentType) {
+        case 'headline':
+          if (promptLower.includes('fitness') || promptLower.includes('health')) {
+            return 'Transform Your Body in 30 Days: The Science-Backed Method That Actually Works';
+          }
+          if (promptLower.includes('business') || promptLower.includes('entrepreneur')) {
+            return 'From $0 to $100K: The Entrepreneur\'s Blueprint for Rapid Growth';
+          }
+          if (promptLower.includes('marketing') || promptLower.includes('funnel')) {
+            return 'Double Your Conversions with This Simple Marketing Strategy';
+          }
+          if (promptLower.includes('course') || promptLower.includes('education')) {
+            return 'Master Any Skill 10x Faster with This Revolutionary Learning System';
+          }
+          return 'Unlock Your True Potential: The System That Changes Everything';
+          
+        case 'subheadline':
+          if (promptLower.includes('fitness')) {
+            return 'Join 50,000+ people who\'ve already transformed their bodies using our proven system - no gym required, results guaranteed in 30 days or your money back';
+          }
+          if (promptLower.includes('business')) {
+            return 'The exact step-by-step system used by 10,000+ entrepreneurs to build profitable businesses from scratch - even if you\'re starting with $0';
+          }
+          if (promptLower.includes('marketing')) {
+            return 'Discover the conversion optimization secrets that helped our clients generate over $50M in additional revenue last year alone';
+          }
+          return 'The proven method that\'s helped thousands achieve extraordinary results - backed by real data and success stories';
+          
+        case 'cta':
+          if (promptLower.includes('free') || promptLower.includes('trial')) return 'Start Your Free Trial';
+          if (promptLower.includes('download') || promptLower.includes('guide')) return 'Get Instant Access';
+          if (promptLower.includes('course') || promptLower.includes('training')) return 'Enroll Now';
+          if (promptLower.includes('consultation') || promptLower.includes('call')) return 'Book Your Call';
+          return 'Get Started Today';
+          
+        case 'description':
+          return 'This comprehensive solution addresses your specific needs with proven strategies that deliver real results. Our approach combines cutting-edge techniques with time-tested methods to ensure your success.';
+          
+        default:
+          return `AI-generated ${contentType} content based on: ${userPrompt}`;
+      }
     };
     
-    const options = templates[type] || templates.headline;
-    return options[Math.floor(Math.random() * options.length)];
+    return generateContextualContent(type, prompt);
   };
 
   const value = {
