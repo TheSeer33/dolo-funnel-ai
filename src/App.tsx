@@ -9,6 +9,7 @@ import AdminPanel from './pages/AdminPanel';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { DataProvider } from './contexts/DataContext';
 import LoadingSpinner from './components/LoadingSpinner';
+import MobileOptimized from './components/MobileOptimized';
 
 function AppRoutes() {
   const { user, loading } = useAuth();
@@ -46,15 +47,17 @@ function AppRoutes() {
 
 function App() {
   return (
-    <AuthProvider>
-      <DataProvider>
-        <Router>
-          <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
-            <AppRoutes />
-          </div>
-        </Router>
-      </DataProvider>
-    </AuthProvider>
+    <MobileOptimized>
+      <AuthProvider>
+        <DataProvider>
+          <Router>
+            <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+              <AppRoutes />
+            </div>
+          </Router>
+        </DataProvider>
+      </AuthProvider>
+    </MobileOptimized>
   );
 }
 
