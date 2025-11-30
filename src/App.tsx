@@ -49,7 +49,7 @@ function App() {
           </div>
         </Router>
       </DataProvider>
-    </AuthProvider>
+    </Router>
   );
 }
 
