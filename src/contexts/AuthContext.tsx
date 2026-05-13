@@ -31,29 +31,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null)
       setLoading(false)
     })
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)
     })
-
     return () => subscription.unsubscribe()
   }, [])
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { full_name: fullName } }
-    })
-    if (!error) {
-      await supabase.from('profiles').upsert({
-        id: (await supabase.auth.getUser()).data.user?.id!,
-        email,
-        full_name: fullName,
-        plan: 'free'
-      })
+    const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName } } })
+    if (!error && data.user) {
+      await supabase.from('profiles').upsert({ id: data.user.id, email, full_name: fullName, plan: 'free', funnels_count: 0 })
     }
     return { error }
   }
@@ -63,15 +52,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error }
   }
 
-  const signOut = async () => {
-    await supabase.auth.signOut()
-  }
+  const signOut = async () => { await supabase.auth.signOut() }
 
   const signInWithGoogle = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/dashboard` }
-    })
+    await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/dashboard` } })
   }
 
   return (

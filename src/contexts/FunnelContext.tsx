@@ -44,13 +44,9 @@ export function FunnelProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false)
 
   const fetchFunnels = async () => {
-    if (!user) return
+    if (!user) { setFunnels([]); return }
     setLoading(true)
-    const { data } = await supabase
-      .from('funnels')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
+    const { data } = await supabase.from('funnels').select('*').eq('user_id', user.id).order('created_at', { ascending: false })
     setFunnels(data || [])
     setLoading(false)
   }
@@ -59,12 +55,8 @@ export function FunnelProvider({ children }: { children: ReactNode }) {
 
   const createFunnel = async (data: Partial<Funnel>) => {
     if (!user) return null
-    const { data: newFunnel, error } = await supabase
-      .from('funnels')
-      .insert({ ...data, user_id: user.id, views: 0, conversions: 0 })
-      .select()
-      .single()
-    if (error) return null
+    const { data: newFunnel, error } = await supabase.from('funnels').insert({ ...data, user_id: user.id, views: 0, conversions: 0 }).select().single()
+    if (error) { console.error(error); return null }
     setFunnels(prev => [newFunnel, ...prev])
     return newFunnel
   }

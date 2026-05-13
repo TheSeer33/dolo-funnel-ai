@@ -11,7 +11,7 @@ export default function WaitlistModal({ onClose }: { onClose: () => void }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    await supabase.from('waitlist').insert({ email, name, source: 'landing' })
+    await supabase.from('waitlist').insert({ email, name, source: 'landing_page' })
     setLoading(false)
     setDone(true)
   }
@@ -31,7 +31,7 @@ export default function WaitlistModal({ onClose }: { onClose: () => void }) {
         ) : (
           <>
             <h2 className="text-2xl font-bold text-white mb-2">Join the waitlist</h2>
-            <p className="text-white/50 text-sm mb-6">Get early access + lifetime 30% discount.</p>
+            <p className="text-white/50 text-sm mb-6">Early access + lifetime 30% discount when we launch Pro.</p>
             <form onSubmit={handleSubmit} className="space-y-4">
               <input type="text" placeholder="Your name" value={name} onChange={e => setName(e.target.value)} required
                 className="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-violet-500" />
