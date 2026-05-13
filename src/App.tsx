@@ -1,64 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';
-import Dashboard from './pages/Dashboard';
-import FunnelBuilder from './pages/FunnelBuilder';
-import Analytics from './pages/Analytics';
-import PricingPage from './pages/PricingPage';
-import AdminPanel from './pages/AdminPanel';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { DataProvider } from './contexts/DataContext';
-import LoadingSpinner from './components/LoadingSpinner';
-import MobileOptimized from './components/MobileOptimized';
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { FunnelProvider } from './contexts/FunnelContext'
+import LandingPage from './pages/LandingPage'
+import Dashboard from './pages/Dashboard'
+import FunnelBuilder from './pages/FunnelBuilder'
 
 function AppRoutes() {
-  const { user, loading } = useAuth();
+  const { user, loading } = useAuth()
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-violet-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    )
   }
 
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route
-        path="/dashboard"
-        element={user ? <Dashboard /> : <Navigate to="/" replace />}
-      />
-      <Route
-        path="/builder"
-        element={user ? <FunnelBuilder /> : <Navigate to="/" replace />}
-      />
-      <Route
-        path="/analytics"
-        element={user ? <Analytics /> : <Navigate to="/" replace />}
-      />
-      <Route
-        path="/pricing"
-        element={user ? <PricingPage /> : <Navigate to="/" replace />}
-      />
-      <Route
-        path="/admin"
-        element={user?.isAdmin ? <AdminPanel /> : <Navigate to="/" replace />}
-      />
+      <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <LandingPage />} />
+      <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/" replace />} />
+      <Route path="/builder" element={user ? <FunnelBuilder /> : <Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-  );
+  )
 }
 
-function App() {
+export default function App() {
   return (
-    <MobileOptimized>
-      <AuthProvider>
-        <DataProvider>
-          <Router>
-            <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
-              <AppRoutes />
-            </div>
-          </Router>
-        </DataProvider>
-      </AuthProvider>
-    </MobileOptimized>
-  );
+    <AuthProvider>
+      <FunnelProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </FunnelProvider>
+    </AuthProvider>
+  )
 }
-
-export default App;

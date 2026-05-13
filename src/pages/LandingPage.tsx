@@ -1,280 +1,227 @@
-import React, { useState } from 'react';
-import { Sparkles, Zap, Target, TrendingUp, Users, ChevronRight, Play, Share2, Video } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import AuthModal from '../components/AuthModal';
-import Button from '../components/Button';
-import FeatureCard from '../components/FeatureCard';
-import TestimonialCard from '../components/TestimonialCard';
-import PricingCard from '../components/PricingCard';
-import WaitlistModal from '../components/WaitlistModal';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react'
+import { Zap, BarChart2, Mail, Globe, ArrowRight, CheckCircle, Star, Users, TrendingUp } from 'lucide-react'
+import AuthModal from '../components/AuthModal'
+import WaitlistModal from '../components/WaitlistModal'
 
 export default function LandingPage() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showWaitlistModal, setShowWaitlistModal] = useState(false);
-  const [authMode, setAuthMode] = useState<'login' | 'signup'>('signup');
+  const [showAuth, setShowAuth] = useState(false)
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup')
+  const [showWaitlist, setShowWaitlist] = useState(false)
 
-  const handleGetStarted = () => {
-    if (user) {
-      navigate('/dashboard');
-    } else {
-      setAuthMode('signup');
-      setShowAuthModal(true);
-    }
-  };
+  const openSignup = () => { setAuthMode('signup'); setShowAuth(true) }
+  const openSignin = () => { setAuthMode('signin'); setShowAuth(true) }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 opacity-10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
-          <div className="text-center">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-8">
-              <Sparkles className="w-4 h-4 text-yellow-400 mr-2" />
-              <span className="text-sm font-medium text-gray-700">AI-Powered Funnel Builder</span>
+    <div className="min-h-screen bg-black text-white">
+      {/* Nav */}
+      <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-pink-500 rounded-lg flex items-center justify-center">
+              <Zap className="w-5 h-5 text-white" />
             </div>
-            
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent mb-6">
-              Build Funnels That
-              <br />
-              Actually Convert
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
-              Create landing pages, email sequences, and ad copy in minutes with AI. 
-              No design skills needed. Just results.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-              <Button 
-                size="lg" 
-                onClick={handleGetStarted}
-                className="group"
-              >
-                Start Building for Free
-                <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                size="lg"
-                onClick={() => setShowWaitlistModal(true)}
-                className="group"
-              >
-                <Play className="w-4 h-4 mr-2" />
-                Watch Demo
-              </Button>
+            <span className="text-xl font-bold">DOLO</span>
+          </div>
+          <div className="hidden md:flex items-center gap-8 text-sm text-white/60">
+            <a href="#features" className="hover:text-white transition-colors">Features</a>
+            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+            <a href="#testimonials" className="hover:text-white transition-colors">Stories</a>
+          </div>
+          <div className="flex items-center gap-3">
+            <button onClick={openSignin} className="text-sm text-white/70 hover:text-white transition-colors">Sign in</button>
+            <button onClick={openSignup} className="bg-violet-600 hover:bg-violet-500 text-white text-sm px-4 py-2 rounded-lg font-medium transition-colors">
+              Start free
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section className="pt-32 pb-24 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/30 rounded-full px-4 py-1.5 text-sm text-violet-400 mb-8">
+            <span className="w-2 h-2 bg-violet-400 rounded-full animate-pulse"></span>
+            Beta — Free while we grow
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            Build funnels that
+            <span className="bg-gradient-to-r from-violet-400 to-pink-400 bg-clip-text text-transparent"> actually convert</span>
+          </h1>
+          <p className="text-xl text-white/60 mb-10 max-w-2xl mx-auto leading-relaxed">
+            Describe your business. DOLO's AI builds your complete funnel — headline, copy, email sequence — in seconds. No agency. No tech stack. Just results.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              onClick={openSignup}
+              className="bg-gradient-to-r from-violet-600 to-pink-600 hover:from-violet-500 hover:to-pink-500 text-white px-8 py-4 rounded-xl font-semibold text-lg flex items-center gap-2 transition-all shadow-2xl shadow-violet-500/25"
+            >
+              Build my funnel free <ArrowRight className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setShowWaitlist(true)}
+              className="border border-white/20 text-white/80 hover:border-white/40 hover:text-white px-8 py-4 rounded-xl font-medium text-lg transition-all"
+            >
+              Join waitlist
+            </button>
+          </div>
+          <p className="mt-4 text-sm text-white/30">No credit card required. Free plan forever.</p>
+        </div>
+
+        {/* Social proof bar */}
+        <div className="max-w-3xl mx-auto mt-16 flex flex-wrap items-center justify-center gap-8 text-white/40 text-sm">
+          <div className="flex items-center gap-2"><Users className="w-4 h-4" /><span>73M solopreneurs</span></div>
+          <div className="flex items-center gap-2"><TrendingUp className="w-4 h-4" /><span>$480B creator economy</span></div>
+          <div className="flex items-center gap-2"><Star className="w-4 h-4 text-yellow-400" /><span className="text-white/60">4.9/5 rating</span></div>
+        </div>
+      </section>
+
+      {/* Demo Preview */}
+      <section className="pb-24 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+            <div className="bg-white/5 px-6 py-4 flex items-center gap-3 border-b border-white/10">
+              <div className="flex gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500/60"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-500/60"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500/60"></div>
+              </div>
+              <span className="text-white/30 text-sm">DOLO AI Funnel Builder</span>
             </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-2">50K+</div>
-                <div className="text-sm text-gray-600">Happy Users</div>
+            <div className="p-8 grid md:grid-cols-2 gap-8">
+              <div>
+                <p className="text-white/40 text-xs uppercase tracking-wider mb-3">Your Business</p>
+                <div className="bg-white/5 rounded-xl p-4 text-white/70 text-sm mb-6">
+                  I help busy professionals reclaim 3+ hours daily through productivity systems and automation.
+                </div>
+                <div className="flex items-center gap-2 text-violet-400 text-sm mb-4">
+                  <Zap className="w-4 h-4 animate-pulse" />
+                  <span>DOLO AI generating your funnel...</span>
+                </div>
+                <div className="space-y-3">
+                  {['Headline crafted', 'Email sequence written', 'CTA optimized', 'Funnel published'].map((item, i) => (
+                    <div key={i} className="flex items-center gap-2 text-sm text-white/60">
+                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-2">$2.3M+</div>
-                <div className="text-sm text-gray-600">Revenue Generated</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-2">85%</div>
-                <div className="text-sm text-gray-600">Higher Conversions</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-2">4.9★</div>
-                <div className="text-sm text-gray-600">User Rating</div>
+              <div className="bg-gradient-to-br from-violet-500/10 to-pink-500/10 border border-violet-500/20 rounded-xl p-6">
+                <div className="text-xs text-white/30 mb-3 uppercase tracking-wider">Live Funnel Preview</div>
+                <h3 className="text-lg font-bold text-white mb-2">Reclaim 3 Hours Daily — Free Productivity Masterclass</h3>
+                <p className="text-white/50 text-sm mb-4">Join 15,000+ executives who eliminated overwhelm and got their evenings back.</p>
+                <button className="w-full bg-gradient-to-r from-violet-600 to-pink-600 text-white py-3 rounded-lg font-semibold text-sm">
+                  Get My Free Masterclass
+                </button>
+                <p className="text-center text-white/30 text-xs mt-2">Instant access. No spam.</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Features */}
+      <section id="features" className="py-24 px-6 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Everything You Need to Scale
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              From landing pages to email sequences, our AI handles the heavy lifting 
-              so you can focus on growing your business.
-            </p>
+            <h2 className="text-4xl font-bold mb-4">Everything a solopreneur needs</h2>
+            <p className="text-white/50 text-lg">One platform. All the leverage.</p>
           </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <FeatureCard
-              icon={<Zap className="w-8 h-8" />}
-              title="AI-Powered Content"
-              description="Generate compelling headlines, copy, and CTAs that convert with our advanced AI engine."
-              gradient="from-yellow-400 to-orange-500"
-            />
-            <FeatureCard
-              icon={<Target className="w-8 h-8" />}
-              title="Smart Targeting"
-              description="Automatically optimize your funnels for your specific audience and industry."
-              gradient="from-green-400 to-blue-500"
-            />
-            <FeatureCard
-              icon={<TrendingUp className="w-8 h-8" />}
-              title="Real-time Analytics"
-              description="Track conversions, A/B test variations, and optimize performance instantly."
-              gradient="from-purple-400 to-pink-500"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 bg-white/50 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Loved by Entrepreneurs
-            </h2>
-            <p className="text-xl text-gray-600">
-              See what our users are saying about their results
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <TestimonialCard
-              name="Sarah Chen"
-              role="E-commerce Founder"
-              avatar="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?w=150"
-              content="Increased my conversion rate from 2% to 18% in just 3 weeks. This tool is incredible!"
-              rating={5}
-            />
-            <TestimonialCard
-              name="Mike Rodriguez"
-              role="Digital Marketer"
-              avatar="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?w=150"
-              content="The AI writes better copy than I do. Saved me 20+ hours per week on funnel creation."
-              rating={5}
-            />
-            <TestimonialCard
-              name="Emma Thompson"
-              role="Course Creator"
-              avatar="https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?w=150"
-              content="From $5K to $50K monthly revenue in 6 months. The analytics helped optimize everything."
-              rating={5}
-            />
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { icon: Zap, title: 'AI Funnel Builder', desc: 'Describe your business. Get a complete, high-converting funnel in seconds — headline, copy, CTA, and all.', color: 'violet' },
+              { icon: Mail, title: 'Email Sequence Generator', desc: '5-part nurture sequences written by AI trained on 10,000+ converting campaigns. Ready to plug into any email tool.', color: 'pink' },
+              { icon: BarChart2, title: 'Conversion Analytics', desc: 'Track views, conversions, and revenue across every funnel. Know exactly what\'s working.', color: 'blue' },
+              { icon: Globe, title: 'One-Click Publish', desc: 'Publish your funnel to your own URL instantly. Share-ready in under 60 seconds.', color: 'green' },
+              { icon: Users, title: 'Lead Capture Built-In', desc: 'Every funnel collects emails automatically. Your list grows while you sleep.', color: 'orange' },
+              { icon: TrendingUp, title: 'A/B Testing', desc: 'Test headlines, CTAs, and offers. Let data pick the winner. No guessing.', color: 'red' },
+            ].map((f, i) => (
+              <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-colors">
+                <div className={`w-10 h-10 rounded-xl bg-${f.color}-500/20 flex items-center justify-center mb-4`}>
+                  <f.icon className={`w-5 h-5 text-${f.color}-400`} />
+                </div>
+                <h3 className="font-semibold text-white mb-2">{f.title}</h3>
+                <p className="text-white/50 text-sm leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Pricing */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Simple, Transparent Pricing
-            </h2>
-            <p className="text-xl text-gray-600">
-              Start free, scale as you grow. No hidden fees, ever.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <PricingCard
-              name="Starter"
-              price="$0"
-              period="forever"
-              description="Perfect for testing the waters"
-              features={[
-                "3 active funnels",
-                "AI content generation",
-                "Basic analytics",
-                "Email support",
-                "Mobile responsive"
-              ]}
-              buttonText="Get Started Free"
-              onButtonClick={handleGetStarted}
-            />
-            <PricingCard
-              name="Pro"
-              price="$29"
-              period="month"
-              description="For serious entrepreneurs"
-              features={[
-                "Unlimited funnels",
-                "Advanced AI features",
-                "A/B testing",
-                "Priority support",
-                "Custom domains",
-                "Advanced analytics",
-                "Email automation"
-              ]}
-              buttonText="Start Pro Trial"
-              onButtonClick={handleGetStarted}
-              popular
-            />
-            <PricingCard
-              name="Enterprise"
-              price="$99"
-              period="month"
-              description="For scaling businesses"
-              features={[
-                "Everything in Pro",
-                "White label solution",
-                "API access",
-                "Dedicated support",
-                "Custom integrations",
-                "Advanced reporting",
-                "Team collaboration"
-              ]}
-              buttonText="Contact Sales"
-              onButtonClick={() => setShowWaitlistModal(true)}
-            />
-          </div>
+      <section id="pricing" className="py-24 px-6 border-t border-white/5">
+        <div className="max-w-4xl mx-auto text-center mb-16">
+          <h2 className="text-4xl font-bold mb-4">Simple pricing</h2>
+          <p className="text-white/50 text-lg">Start free. Scale when you're ready.</p>
+        </div>
+        <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-6">
+          {[
+            { name: 'Free', price: '$0', period: 'forever', features: ['3 funnels', 'AI content generation', 'Basic analytics', 'DOLO subdomain'], cta: 'Start free', highlight: false },
+            { name: 'Pro', price: '$29', period: '/month', features: ['Unlimited funnels', 'Custom domain', 'Email sequences', 'Advanced analytics', 'A/B testing', 'Priority support'], cta: 'Go Pro', highlight: true },
+            { name: 'Scale', price: '$97', period: '/month', features: ['Everything in Pro', 'Team members', 'White-label', 'API access', 'Dedicated support', 'Custom integrations'], cta: 'Go Scale', highlight: false },
+          ].map((plan, i) => (
+            <div key={i} className={`relative rounded-2xl p-6 border ${plan.highlight ? 'bg-gradient-to-b from-violet-600/20 to-pink-600/10 border-violet-500/50' : 'bg-white/5 border-white/10'}`}>
+              {plan.highlight && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-violet-600 to-pink-600 text-white text-xs px-3 py-1 rounded-full font-medium">Most Popular</div>}
+              <div className="mb-6">
+                <p className="text-white/60 text-sm mb-1">{plan.name}</p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-bold text-white">{plan.price}</span>
+                  <span className="text-white/40 text-sm">{plan.period}</span>
+                </div>
+              </div>
+              <ul className="space-y-3 mb-8">
+                {plan.features.map((f, j) => (
+                  <li key={j} className="flex items-center gap-2 text-sm text-white/70">
+                    <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={openSignup}
+                className={`w-full py-3 rounded-xl font-semibold text-sm transition-all ${plan.highlight ? 'bg-gradient-to-r from-violet-600 to-pink-600 hover:from-violet-500 hover:to-pink-500 text-white' : 'border border-white/20 text-white hover:border-white/40'}`}
+              >
+                {plan.cta}
+              </button>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to 10x Your Conversions?
-          </h2>
-          <p className="text-xl text-white/90 mb-8">
-            Join thousands of entrepreneurs already building better funnels with AI
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button 
-              size="lg" 
-              variant="white"
-              onClick={handleGetStarted}
-              className="group"
-            >
-              Start Building Now
-              <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline"
-              onClick={() => setShowWaitlistModal(true)}
-              className="text-white border-white hover:bg-white/10"
-            >
-              Join Waitlist
-            </Button>
-          </div>
+      {/* CTA */}
+      <section className="py-24 px-6 border-t border-white/5">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-4">Your funnel is 60 seconds away</h2>
+          <p className="text-white/50 text-lg mb-8">No agency. No tech stack. Just describe your business and DOLO does the rest.</p>
+          <button
+            onClick={openSignup}
+            className="bg-gradient-to-r from-violet-600 to-pink-600 hover:from-violet-500 hover:to-pink-500 text-white px-10 py-4 rounded-xl font-semibold text-lg flex items-center gap-2 mx-auto transition-all shadow-2xl shadow-violet-500/25"
+          >
+            Build my funnel — it's free <ArrowRight className="w-5 h-5" />
+          </button>
         </div>
       </section>
 
-      {/* Modals */}
-      {showAuthModal && (
-        <AuthModal
-          mode={authMode}
-          onClose={() => setShowAuthModal(false)}
-          onToggleMode={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
-        />
-      )}
-      
-      {showWaitlistModal && (
-        <WaitlistModal onClose={() => setShowWaitlistModal(false)} />
-      )}
+      {/* Footer */}
+      <footer className="border-t border-white/5 py-12 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-gradient-to-br from-violet-500 to-pink-500 rounded-md flex items-center justify-center">
+              <Zap className="w-4 h-4 text-white" />
+            </div>
+            <span className="font-bold text-white">DOLO</span>
+          </div>
+          <p className="text-white/30 text-sm">© 2026 DOLO. Built for solopreneurs, by a solopreneur.</p>
+          <div className="flex gap-6 text-sm text-white/30">
+            <a href="#" className="hover:text-white/60 transition-colors">Privacy</a>
+            <a href="#" className="hover:text-white/60 transition-colors">Terms</a>
+            <a href="mailto:hello@usedolo.com" className="hover:text-white/60 transition-colors">Contact</a>
+          </div>
+        </div>
+      </footer>
+
+      {showAuth && <AuthModal mode={authMode} onClose={() => setShowAuth(false)} onSwitch={() => setAuthMode(m => m === 'signin' ? 'signup' : 'signin')} />}
+      {showWaitlist && <WaitlistModal onClose={() => setShowWaitlist(false)} />}
     </div>
-  );
+  )
 }
