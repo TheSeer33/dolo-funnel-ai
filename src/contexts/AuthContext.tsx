@@ -31,19 +31,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null)
       setLoading(false)
     })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)
+
+      // Auto-create profile on first sign in
+      if (event === 'SIGNED_IN' && session?.user) {
+        const { data: existing } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('id', session.user.id)
+          .single()
+        if (!existing) {
+          await supabase.from('profiles').insert({
+            id: session.user.id,
+            email: session.user.email,
+            full_name: session.user.user_metadata?.full_name || '',
+            plan: 'free',
+            funnels_count: 0
+          })
+        }
+      }
     })
     return () => subscription.unsubscribe()
   }, [])
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName } } })
-    if (!error && data.user) {
-      await supabase.from('profiles').upsert({ id: data.user.id, email, full_name: fullName, plan: 'free', funnels_count: 0 })
-    }
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: fullName },
+        emailRedirectTo: 'https://usedolo.com/dashboard'
+      }
+    })
     return { error }
   }
 
@@ -55,7 +78,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => { await supabase.auth.signOut() }
 
   const signInWithGoogle = async () => {
-    await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/dashboard` } })
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: 'https://usedolo.com/dashboard' }
+    })
   }
 
   return (
