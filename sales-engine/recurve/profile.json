@@ -1,0 +1,29 @@
+{
+  "business": "DOLO",
+  "offer": "Creator operating system for organizing creator workflows, opportunities, monetization and execution.",
+  "targetOutcome": "Paid subscriptions, creator-team pilots, agency adoption and recurring MRR.",
+  "strikeSignals": [
+    "creator posting at high frequency",
+    "multiple brand deals",
+    "team or manager involvement",
+    "cross-platform content",
+    "missed opportunities",
+    "manual spreadsheet workflow",
+    "agency managing many creators",
+    "creator hiring operations support"
+  ],
+  "icp": [
+    "full-time creators",
+    "creator teams",
+    "talent managers",
+    "creator agencies",
+    "UGC operators",
+    "small media businesses"
+  ],
+  "exclude": [
+    "inactive creators",
+    "hobby accounts with no monetization intent",
+    "prospects with no recurring workflow pain"
+  ],
+  "cta": "Offer a focused workflow demo or paid pilot around deal tracking, content operations, or monetization."
+}
